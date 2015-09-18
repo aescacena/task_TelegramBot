@@ -2,26 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3adfca5e-927a-49c4-9ff0-ae697f25853a" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.gitignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/echo.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/activate" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/activate.csh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/activate.fish" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/activate_this.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/easy_install" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/easy_install-2.7" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/pip" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/pip2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/pip2.7" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/python" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/python2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/python2.7" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/bin/wheel" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/include/python2.7" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/local/bin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/local/include" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/local/lib" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/pip-selfcheck.json" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="task_TelegramBot.iws" />
