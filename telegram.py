@@ -112,6 +112,7 @@ def existsAndDeleteTask(message):
     if(listaTareas[int(message.text)] != None):
         bot.send_message(id_antonio, 'Eliminado', reply_markup=None)
         del listaTareas[int(message.text)]
+        addToFileJSON() #json file rewrite
     else:
         bot.send_message(id_antonio, 'Esta tarea no existe', reply_markup=None)
 '''
@@ -158,7 +159,7 @@ def process_description_step(message):
     try:
         chat_id = message.chat.id
         tarea = tareas()
-        tarea.date = date.today()
+        tarea.date = str(date.today().day) + '/' + str(date.today().month) + '/' + str(date.today().year)
         tarea.description = message.text
         user_dict[chat_id] = tarea
 
@@ -183,7 +184,7 @@ def process_date_end(message):
             msg = bot.send_message(id_antonio, 'Ano', reply_markup=markup)
             bot.register_next_step_handler(msg, process_ano_step)
         else:
-            message.text = 'Not'
+            message.text = u'No'
             process_final_task(message)
     except Exception as e:
         bot.send_message(id_antonio, e.message)
@@ -266,14 +267,15 @@ def process_final_task(message):
         chat_id = message.chat.id
         tarea = user_dict[chat_id]
 
-        if message.text == 'Not':
+        if message.text == u'No':
             bot.send_message(chat_id, 'Tarea creada: \n' + 'Creada en: '+str(tarea.date) + '\n' + 'Descripcion: '+str(tarea.description))
         else:
             newDate = user_dict[chat_id+1]
-            tarea.dateEnd =  str(newDate.ano) +'-' + str(newDate.mes) + '-' + str(newDate.dia)
+            tarea.dateEnd =  str(newDate.dia) +'/' + str(newDate.mes) + '/' + str(newDate.ano)
             bot.send_message(chat_id, 'Tarea creada: \n' + 'Creada en: '+str(tarea.date) + '\n' + 'Caduca en: '+ str(tarea.dateEnd) + '\n' + 'Descripcion: '+str(tarea.description))
 
         listaTareas.append(tarea)
+        addToFileJSON()
 
     except Exception as e:
         bot.send_message(id_antonio, e.message)
