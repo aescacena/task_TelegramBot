@@ -48,7 +48,7 @@ while True:
     pass
 '''
 
-API_TOKEN = 'API_TOKEN'
+API_TOKEN = '137531233:AAF2fu8D_lD14gqbJrgzVrDe0e5i3W4mzOw'
 
 bot = telebot.TeleBot(API_TOKEN)
 meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
@@ -101,6 +101,36 @@ def userPermitted(id):
         bot.send_message(id_antonio, 'No estas autorizado para esta operacion', reply_markup=None)
         return False
 
+@bot.message_handler(commands=['editar'])
+def deleteTask(message):
+    if(userPermitted(message.chat.id)):
+        showTasks(message)
+        msg = bot.send_message(id_antonio, 'Elige el numero de tarea a editar', reply_markup=None)
+        bot.register_next_step_handler(msg, selectAndEditTask)
+
+def selectAndEditTask(message):
+    if(listaTareas[int(message.text)-1] != None):
+        user_dict[message.chat.id] = listaTareas[int(message.text)-1]
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+        markup.add('Descripcion', 'Fecha')
+
+        msg = bot.send_message(id_antonio, 'Que desea editar?', reply_markup=markup)
+        bot.register_next_step_handler(msg, process_edit_task)
+
+    else:
+        bot.send_message(id_antonio, 'Esta tarea no existe', reply_markup=None)
+
+def process_edit_task(message):
+    if(listaTareas[int(message.text)-1] != None):
+        optionEdit = message.text
+        #if optionEdit == u'Descripcion':
+            #process_description_step(message)
+
+        if optionEdit == u'Fecha':
+            message.text='Si'
+            process_date_end(message)
+
+
 @bot.message_handler(commands=['eliminar'])
 def deleteTask(message):
     if(userPermitted(message.chat.id)):
@@ -109,9 +139,9 @@ def deleteTask(message):
         bot.register_next_step_handler(msg, existsAndDeleteTask)
 
 def existsAndDeleteTask(message):
-    if(listaTareas[int(message.text)] != None):
+    if(listaTareas[int(message.text)-1] != None):
         bot.send_message(id_antonio, 'Eliminado', reply_markup=None)
-        del listaTareas[int(message.text)]
+        del listaTareas[int(message.text)-1]
         addToFileJSON() #json file rewrite
     else:
         bot.send_message(id_antonio, 'Esta tarea no existe', reply_markup=None)
