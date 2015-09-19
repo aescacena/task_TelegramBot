@@ -6,49 +6,10 @@ import telebot
 from telebot import types
 from datetime import date, datetime
 import calendar, json
-from apscheduler.schedulers.blocking import BlockingScheduler
-
-'''
-API_TOKEN = 'API_TOKEN'
-
-bot = telebot.TeleBot(API_TOKEN)
-
-# Handle '/start' and '/help'
-@bot.message_handler(commands=['hola'])
-def send_welcome(message):
-    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-    markup.add('Temperatura', 'Led')
-    msg = bot.reply_to(message, """\
-Hola soy el bot de domotica.
-Que desea realizar?
-- Consultar Led
-- Consultar temperatura
-""", reply_markup=markup)
-    bot.register_next_step_handler(msg, process_consulta_step)
+import tarea
 
 
-def process_consulta_step(message):
-    try:
-        items = openhab.fetch_all_items('http://192.168.1.137:8080/rest')
-        chat_id = message.chat.id
-        consulta = message.text
-        if (consulta == u'Temperatura'):
-            temp = items.get('TestTemperature')
-            bot.send_message(chat_id,temp.state)
-        if (consulta == u'Led'):
-            led = items.get('TestLed')
-            bot.send_message(chat_id,led.state)
-    except Exception as e:
-        bot.reply_to(message, 'oooops')
-
-bot.polling()
-
-while True:
-    time.sleep(1)
-    pass
-'''
-
-API_TOKEN = 'API_TOKEN'
+API_TOKEN = 'API_TOKE'
 
 bot = telebot.TeleBot(API_TOKEN)
 meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
@@ -65,11 +26,6 @@ class dateObject:
         self.mes = None
         self.dia = None
 
-class tareas:
-    def __init__(self):
-        self.date = None
-        self.dateEnd = None
-        self.description = None
 '''
 Upgrade tasks stored in the JSON file to memory. A (listaTareas)
 '''
@@ -80,7 +36,7 @@ def initializeObjectsTasks():
 
             if(json_data != None):
                 for s in json_data:
-                    nuevaTarea = tareas()
+                    nuevaTarea = tarea.ObjectTarea()
                     nuevaTarea.date = s['date']
                     nuevaTarea.dateEnd = s['dateEnd']
                     nuevaTarea.description = s['description']
@@ -100,7 +56,37 @@ def userPermitted(id):
     else:
         bot.send_message(id_antonio, 'No estas autorizado para esta operacion', reply_markup=None)
         return False
+'''
+@bot.message_handler(commands=['editar'])
+def deleteTask(message):
+    if(userPermitted(message.chat.id)):
+        showTasks(message)
+        msg = bot.send_message(id_antonio, 'Elige el numero de tarea a editar', reply_markup=None)
+        bot.register_next_step_handler(msg, selectAndEditTask)
 
+def selectAndEditTask(message):
+    if(listaTareas[int(message.text)-1] != None):
+        user_dict[message.chat.id] = listaTareas[int(message.text)-1]
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+        markup.add('Descripcion', 'Fecha')
+
+        msg = bot.send_message(id_antonio, 'Que desea editar?', reply_markup=markup)
+        bot.register_next_step_handler(msg, process_edit_task)
+
+    else:
+        bot.send_message(id_antonio, 'Esta tarea no existe', reply_markup=None)
+
+def process_edit_task(message):
+    if(listaTareas[int(message.text)-1] != None):
+        optionEdit = message.text
+        #if optionEdit == u'Descripcion':
+            #process_description_step(message)
+
+        if optionEdit == u'Fecha':
+            message.text='Si'
+            process_date_end(message)
+
+'''
 @bot.message_handler(commands=['eliminar'])
 def deleteTask(message):
     if(userPermitted(message.chat.id)):
@@ -109,9 +95,9 @@ def deleteTask(message):
         bot.register_next_step_handler(msg, existsAndDeleteTask)
 
 def existsAndDeleteTask(message):
-    if(listaTareas[int(message.text)] != None):
+    if(listaTareas[int(message.text)-1] != None):
         bot.send_message(id_antonio, 'Eliminado', reply_markup=None)
-        del listaTareas[int(message.text)]
+        del listaTareas[int(message.text)-1]
         addToFileJSON() #json file rewrite
     else:
         bot.send_message(id_antonio, 'Esta tarea no existe', reply_markup=None)
@@ -158,10 +144,10 @@ def send_welcome(message):
 def process_description_step(message):
     try:
         chat_id = message.chat.id
-        tarea = tareas()
-        tarea.date = str(date.today().day) + '/' + str(date.today().month) + '/' + str(date.today().year)
-        tarea.description = message.text
-        user_dict[chat_id] = tarea
+        nuevaTarea = tarea.ObjectTarea()
+        nuevaTarea.date = str(date.today().day) + '/' + str(date.today().month) + '/' + str(date.today().year)
+        nuevaTarea.description = message.text
+        user_dict[chat_id] = nuevaTarea
 
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         markup.add('Si', 'No')
